@@ -2,7 +2,7 @@
 
 // 默认链接数据 - 地区适应化适配
 const defaultLinks = [
-    { id: 1, name: '家庭网站(SWGW)', url: 'http://192.168.1.111', icon: 'fas fa-network-wired' },
+    { id: 1, name: 'GitHub 项目仓库', url: 'https://https://github.com/Zhengruize/startpage', icon: 'fas fa-network-wired' },
     { id: 2, name: '百度', url: 'https://www.baidu.com', icon: 'fas fa-search' },
     { id: 3, name: '淘宝', url: 'https://www.taobao.com', icon: 'fas fa-shopping-cart' },
     { id: 4, name: '京东', url: 'https://www.jd.com', icon: 'fas fa-shopping-bag' },
