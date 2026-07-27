@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>主页</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6.4.0 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 分离的样式文件 -->
+    <link rel="stylesheet" href="css/style.css?v=20260727e">
+</head>
+<body>
+    <!-- 保持所有HTML内容不变 -->
+    
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-home"></i>
+                <span>主页</span>
+            </div>
+            <div class="header-controls">
+                <!-- 调换按钮位置：设置按钮在前，主题切换按钮在后 -->
+                <button class="settings-toggle" id="settingsToggle">
+                    <i class="fas fa-cog"></i>
+                </button>
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="搜索或输入网址">
+                    <button class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="quick-links">
+                <div class="section-header">
+                    <h2 class="section-title">常用网站</h2>
+                    <button class="edit-button" id="openCustomizeBtnInSection">
+                        <i class="fas fa-edit"></i>
+                        <span>编辑</span>
+                    </button>
+                </div>
+                <div class="links-grid" id="linksGrid">
+                    <!-- 链接将通过JavaScript动态生成 -->
+                </div>
+            </div>
+
+            <div class="info-widgets">
+                <div class="widget time-widget" id="timeWidget">
+                    <div class="widget-title">
+                        <i class="fas fa-clock"></i>
+                        <span>时间与日期</span>
+                    </div>
+                    <div class="time-display" id="currentTime">00:00:00</div>
+                    <div class="date-display" id="currentDate">2025年1月1日 星期一</div>
+                </div>
+
+                <div class="widget weather-widget" id="weatherWidget">
+                    <div class="widget-title">
+                        <i class="fas fa-cloud-sun"></i>
+                        <span>天气</span>
+                    </div>
+                    <div class="weather-info">
+                        <div class="weather-temp" id="weatherTemp">--°C</div>
+                        <div class="weather-details" id="weatherDetails">
+                            <div class="loading">获取天气中...</div>
+                        </div>
+                    </div>
+                    <div class="location-info">
+                        <i class="fas fa-location-dot"></i>
+                        <span id="locationText">西安, 中国</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 自定义链接模态框 -->
+    <div class="modal" id="customizeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">自定义常用网站</h2>
+                <button class="close-modal" id="closeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="links-form">
+                <div class="links-list-container" id="linksListContainer">
+                    <div class="links-list" id="linksList">
+                        <!-- 链接列表将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer" id="modalFooter">
+                <div class="modal-footer-left">
+                    <button class="btn btn-add" id="addBtn">添加</button>
+                    <button class="btn btn-reset" id="resetLinksBtn">恢复</button>
+                </div>
+                <div class="modal-footer-right" id="saveCancelButtons">
+                    <button class="btn btn-cancel" id="cancelBtn">取消</button>
+                    <button class="btn btn-save" id="saveBtn">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加/编辑网站模态框（独立对话框，层叠在自定义链接对话框之上） -->
+    <div class="modal" id="addLinkModal" style="z-index: 2000;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="addLinkModalTitle">添加网站</h2>
+                <button class="close-modal" id="closeAddLinkModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="links-form">
+                <div class="form-content">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="linkName">网站名称</label>
+                            <input type="text" id="linkName" class="form-input" placeholder="例如：百度">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="linkUrl">网站地址</label>
+                            <input type="text" id="linkUrl" class="form-input" placeholder="例如：https://www.baidu.com">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="linkIcon">选择图标</label>
+                        <div class="icon-selector">
+                            <div class="icon-preview" id="iconPreview">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                            <div class="custom-select" id="linkIconContainer">
+                                <div class="select-selected">地球</div>
+                                <div class="select-items select-hide">
+                                    <div data-value="fas fa-globe">地球</div>
+                                    <div data-value="fas fa-robot">AI</div>
+                                    <div data-value="fas fa-shopping-cart">购物</div>
+                                    <div data-value="fas fa-play-circle">视频</div>
+                                    <div data-value="fas fa-code">开发</div>
+                                    <div data-value="fas fa-newspaper">新闻</div>
+                                    <div data-value="fas fa-envelope">邮件</div>
+                                    <div data-value="fas fa-cloud">云存储</div>
+                                    <div data-value="fas fa-music">音乐</div>
+                                    <div data-value="fas fa-gamepad">游戏</div>
+                                    <div data-value="fas fa-book">阅读</div>
+                                    <div data-value="fas fa-palette">设计</div>
+                                    <div data-value="fas fa-graduation-cap">学习</div>
+                                    <div data-value="fas fa-briefcase">工作</div>
+                                    <div data-value="fas fa-heart">健康</div>
+                                    <div data-value="fas fa-plane">旅行</div>
+                                    <div data-value="fas fa-search">搜索</div>
+                                    <div data-value="fas fa-comments">社交</div>
+                                    <div data-value="fas fa-tv">视频平台</div>
+                                    <div data-value="fas fa-film">影视</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-footer">
+                    <div class="form-actions">
+                        <button class="btn btn-back" id="backFromAddLinkBtn">返回</button>
+                        <button class="btn btn-add" id="addLinkBtn">添加网站</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 设置模态框 -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">设置</h2>
+                <button class="close-modal" id="closeSettingsModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="settings-content">
+                <div class="settings-group">
+                    <h3 class="settings-title">
+                        <i class="fas fa-search"></i>
+                        <span>搜索引擎设置</span>
+                    </h3>
+                    <div class="settings-options">
+                        <div class="settings-option">
+                            <div class="settings-option-content">
+                                <div class="settings-label">默认搜索引擎</div>
+                                <div class="settings-description">选择您偏好的搜索引擎，用于快速搜索</div>
+                            </div>
+                            <div class="settings-control">
+                                <div class="custom-select" id="searchEngineContainer">
+                                    <div class="select-selected">百度</div>
+                                    <div class="select-items select-hide">
+                                        <div data-value="baidu">百度</div>
+                                        <div data-value="bing">Bing</div>
+                                        <div data-value="sogou">搜狗</div>
+                                        <div data-value="360">360搜索</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings-group">
+                    <h3 class="settings-title">
+                        <i class="fas fa-palette"></i>
+                        <span>主题设置</span>
+                    </h3>
+                    <div class="settings-options">
+                        <div class="settings-option" id="darkModeOption">
+                            <div class="settings-option-content">
+                                <div class="settings-label">深色模式</div>
+                                <div class="settings-description">启用深色主题，适合在低光环境下使用</div>
+                            </div>
+                            <div class="settings-control">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="darkModeToggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="settings-option">
+                            <div class="settings-option-content">
+                                <div class="settings-label">跟随系统主题</div>
+                                <div class="settings-description">自动匹配您操作系统的主题设置</div>
+                            </div>
+                            <div class="settings-control">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="systemThemeToggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings-group">
+                    <h3 class="settings-title">
+                        <i class="fas fa-lightbulb"></i>
+                        <span>光标光晕设置</span>
+                    </h3>
+                    <div class="settings-options">
+                        <div class="settings-option">
+                            <div class="settings-option-content">
+                                <div class="settings-label">浅色模式光晕</div>
+                                <div class="settings-description">浅色模式下鼠标周围显示淡蓝色光晕</div>
+                            </div>
+                            <div class="settings-control">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="glowLightToggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="settings-option">
+                            <div class="settings-option-content">
+                                <div class="settings-label">深色模式光晕</div>
+                                <div class="settings-description">深色模式下鼠标周围显示淡蓝色光晕</div>
+                            </div>
+                            <div class="settings-control">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="glowDarkToggle" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings-group">
+                    <h3 class="settings-title">
+                        <i class="fas fa-glass-water"></i>
+                        <span>视觉效果</span>
+                    </h3>
+                    <div class="settings-options">
+                        <div class="settings-option">
+                            <div class="settings-option-content">
+                                <div class="settings-label">玻璃质感效果</div>
+                                <div class="settings-description">开启卡片和对话框的毛玻璃半透明效果，可能会造成卡顿、掉帧，</div>
+                            </div>
+                            <div class="settings-control">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="glassEffectToggle" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings-group">
+                    <h3 class="settings-title">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>天气/时间地区设置</span>
+                    </h3>
+                    <div class="settings-options">
+                        <div class="settings-option">
+                            <div class="settings-option-content">
+                                <div class="settings-label">地区</div>
+                                <div class="settings-description">选择您所在的城市，获取准确的天气和时间信息</div>
+                            </div>
+                            <div class="settings-control">
+                                <div class="custom-select" id="locationSelectContainer">
+                                    <div class="select-selected">西安</div>
+                                    <div class="select-items select-hide">
+                                        <div data-value="39.9042,116.4074">北京</div>
+                                        <div data-value="31.2304,121.4737">上海</div>
+                                        <div data-value="23.1291,113.2644">广州</div>
+                                        <div data-value="34.2612,108.9423">西安</div>
+                                        <div data-value="30.2741,120.1551">杭州</div>
+                                        <div data-value="36.0671,120.3826">青岛</div>
+                                        <div data-value="29.4316,106.9123">重庆</div>
+                                        <div data-value="30.5728,104.0668">成都</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings-group">
+                    <h3 class="settings-title">
+                        <i class="fas fa-edit"></i>
+                        <span>快捷操作</span>
+                    </h3>
+                    <div class="settings-options">
+                        <div class="settings-option">
+                            <div class="settings-option-content">
+                                <div class="settings-label">自定义常用网站</div>
+                                <div class="settings-description">添加、删除或重新排列您常用的网站快捷方式</div>
+                            </div>
+                            <div class="settings-control">
+                                <button class="btn btn-add" id="openCustomizeBtn">
+                                    <i class="fas fa-edit"></i>
+                                    <span>编辑</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 新增关于选项 -->
+                <div class="settings-group">
+                    <h3 class="settings-title">
+                        <i class="fas fa-info-circle"></i>
+                        <span>关于</span>
+                    </h3>
+                    <div class="settings-options">
+                        <div class="settings-option">
+                            <div class="settings-option-content">
+                                <div class="settings-label">版本信息</div>
+                                <div class="settings-description">查看当前版本和更新信息</div>
+                            </div>
+                            <div class="settings-control">
+                                <button class="btn btn-add" id="aboutBtn">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span>关于</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 高级设置模态框 -->
+    <div class="modal" id="advancedSettingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">高级设置</h2>
+                <button class="close-modal" id="closeAdvancedSettingsModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="settings-content">
+                <div class="settings-group">
+                    <h3 class="settings-title">
+                        <i class="fas fa-external-link-alt"></i>
+                        <span>打开方式设置</span>
+                    </h3>
+                    <div class="settings-options">
+                        <div class="settings-option">
+                            <div class="settings-option-content">
+                                <div class="settings-label">搜索框打开方式</div>
+                                <div class="settings-description">设置搜索结果的打开方式</div>
+                            </div>
+                            <div class="settings-control">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="searchOpenInNewTabToggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <span style="margin-left: 10px; font-size: 14px;" id="searchOpenModeLabel">当前页面</span>
+                            </div>
+                        </div>
+                        <div class="settings-option">
+                            <div class="settings-option-content">
+                                <div class="settings-label">快捷网址打开方式</div>
+                                <div class="settings-description">设置快捷网址的打开方式</div>
+                            </div>
+                            <div class="settings-control">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="quickLinksOpenInNewTabToggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <span style="margin-left: 10px; font-size: 14px;" id="quickLinksOpenModeLabel">当前页面</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings-group">
+                    <h3 class="settings-title">
+                        <i class="fas fa-mouse-pointer"></i>
+                        <span>卡片点击设置</span>
+                    </h3>
+                    <div class="settings-options">
+                        <div class="settings-option">
+                            <div class="settings-option-content">
+                                <div class="settings-label">天气卡片跳转网址</div>
+                                <div class="settings-description">点击天气卡片时跳转的网址</div>
+                            </div>
+                            <div class="settings-control">
+                                <input type="text" id="weatherCardUrl" class="text-input" placeholder="https://www.weather.com.cn">
+                            </div>
+                        </div>
+                        <div class="settings-option">
+                            <div class="settings-option-content">
+                                <div class="settings-label">时间卡片跳转网址</div>
+                                <div class="settings-description">点击时间卡片时跳转的网址</div>
+                            </div>
+                            <div class="settings-control">
+                                <input type="text" id="timeCardUrl" class="text-input" placeholder="https://time.is">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings-group">
+                    <h3 class="settings-title">
+                        <i class="fas fa-sliders-h"></i>
+                        <span>界面样式设置 - 圆角细分</span>
+                    </h3>
+                    <div class="settings-options">
+                        <div class="settings-option">
+                            <div class="settings-option-content">
+                                <div class="settings-label">对话框圆角 (px)</div>
+                                <div class="settings-description">调整对话框的圆角大小</div>
+                            </div>
+                            <div class="settings-control">
+                                <div class="border-radius-control">
+                                    <button class="border-radius-btn" id="dialogBorderRadiusDecrease">-</button>
+                                    <span class="border-radius-value" id="dialogBorderRadiusValue">20</span>
+                                    <button class="border-radius-btn" id="dialogBorderRadiusIncrease">+</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="settings-option">
+                            <div class="settings-option-content">
+                                <div class="settings-label">选择框圆角 (px)</div>
+                                <div class="settings-description">调整选择框的圆角大小</div>
+                            </div>
+                            <div class="settings-control">
+                                <div class="border-radius-control">
+                                    <button class="border-radius-btn" id="selectBorderRadiusDecrease">-</button>
+                                    <span class="border-radius-value" id="selectBorderRadiusValue">16</span>
+                                    <button class="border-radius-btn" id="selectBorderRadiusIncrease">+</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="settings-option">
+                            <div class="settings-option-content">
+                                <div class="settings-label">输入框圆角 (px)</div>
+                                <div class="settings-description">调整输入框的圆角大小</div>
+                            </div>
+                            <div class="settings-control">
+                                <div class="border-radius-control">
+                                    <button class="border-radius-btn" id="inputBorderRadiusDecrease">-</button>
+                                    <span class="border-radius-value" id="inputBorderRadiusValue">16</span>
+                                    <button class="border-radius-btn" id="inputBorderRadiusIncrease">+</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="settings-option">
+                            <div class="settings-option-content">
+                                <div class="settings-label">按钮圆角 (px)</div>
+                                <div class="settings-description">调整按钮的圆角大小</div>
+                            </div>
+                            <div class="settings-control">
+                                <div class="border-radius-control">
+                                    <button class="border-radius-btn" id="buttonBorderRadiusDecrease">-</button>
+                                    <span class="border-radius-value" id="buttonBorderRadiusValue">20</span>
+                                    <button class="border-radius-btn" id="buttonBorderRadiusIncrease">+</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="settings-option">
+                            <div class="settings-option-content">
+                                <div class="settings-label">卡片圆角 (px)</div>
+                                <div class="settings-description">调整卡片的圆角大小</div>
+                            </div>
+                            <div class="settings-control">
+                                <div class="border-radius-control">
+                                    <button class="border-radius-btn" id="cardBorderRadiusDecrease">-</button>
+                                    <span class="border-radius-value" id="cardBorderRadiusValue">20</span>
+                                    <button class="border-radius-btn" id="cardBorderRadiusIncrease">+</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="settings-option">
+                            <div class="settings-option-content">
+                                <div class="settings-label">图标圆角 (px)</div>
+                                <div class="settings-description">调整快捷方式图标的圆角大小（0=直角，50=最大圆角）</div>
+                            </div>
+                            <div class="settings-control">
+                                <div class="border-radius-control">
+                                    <button class="border-radius-btn" id="iconBorderRadiusDecrease">-</button>
+                                    <span class="border-radius-value" id="iconBorderRadiusValue">50</span>
+                                    <button class="border-radius-btn" id="iconBorderRadiusIncrease">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings-group">
+                    <h3 class="settings-title">
+                        <i class="fas fa-eye"></i>
+                        <span>卡片显示设置</span>
+                    </h3>
+                    <div class="settings-options">
+                        <div class="settings-option">
+                            <div class="settings-option-content">
+                                <div class="settings-label">显示时间卡片</div>
+                                <div class="settings-description">控制时间卡片的显示与隐藏</div>
+                            </div>
+                            <div class="settings-control">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="showTimeCardToggle" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="settings-option">
+                            <div class="settings-option-content">
+                                <div class="settings-label">显示天气卡片</div>
+                                <div class="settings-description">控制天气卡片的显示与隐藏</div>
+                            </div>
+                            <div class="settings-control">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="showWeatherCardToggle" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings-group">
+                    <h3 class="settings-title">
+                        <i class="fas fa-sync-alt"></i>
+                        <span>天气更新设置</span>
+                    </h3>
+                    <div class="settings-options">
+                        <div class="settings-option">
+                            <div class="settings-option-content">
+                                <div class="settings-label">天气更新间隔 (分钟)</div>
+                                <div class="settings-description">设置天气信息自动更新的时间间隔</div>
+                            </div>
+                            <div class="settings-control">
+                                <div class="border-radius-control">
+                                    <button class="border-radius-btn" id="weatherUpdateIntervalDecrease">-</button>
+                                    <span class="border-radius-value" id="weatherUpdateIntervalValue">2</span>
+                                    <button class="border-radius-btn" id="weatherUpdateIntervalIncrease">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings-group">
+                    <h3 class="settings-title">
+                        <i class="fas fa-database"></i>
+                        <span>数据源设置</span>
+                    </h3>
+                    <div class="settings-options">
+                        <div class="settings-option">
+                            <div class="settings-option-content">
+                                <div class="settings-label">天气数据源</div>
+                                <div class="settings-description">选择天气信息的获取来源</div>
+                            </div>
+                            <div class="settings-control">
+                                <div class="custom-select" id="weatherSourceContainer">
+                                    <div class="select-selected">Open-Meteo</div>
+                                    <div class="select-items select-hide">
+                                        <div data-value="open-meteo">Open-Meteo</div>
+                                        <div data-value="accuweather">AccuWeather</div>
+                                        <div data-value="weather-com">Weather.com</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="settings-option">
+                            <div class="settings-option-content">
+                                <div class="settings-label">时间数据源</div>
+                                <div class="settings-description">选择时间信息的获取来源</div>
+                            </div>
+                            <div class="settings-control">
+                                <div class="custom-select" id="timeSourceContainer">
+                                    <div class="select-selected">本地时间</div>
+                                    <div class="select-items select-hide">
+                                        <div data-value="local">本地时间</div>
+                                        <div data-value="worldtimeapi">WorldTimeAPI</div>
+                                        <div data-value="timeapi">TimeAPI</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <div class="modal-footer-left">
+                    <button class="btn btn-reset" id="resetAdvancedSettingsBtn">恢复默认</button>
+                </div>
+                <div class="modal-footer-right">
+                    <button class="btn btn-cancel" id="cancelAdvancedSettingsBtn">取消</button>
+                    <button class="btn btn-save" id="saveAdvancedSettingsBtn">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 关于对话框 - 完全重写 -->
+    <div class="about-modal" id="aboutModal">
+        <div class="about-content">
+            <div class="about-header">
+                <h2 class="about-title">
+                    <i class="fas fa-info-circle"></i>
+                    <span>关于</span>
+                </h2>
+                <button class="close-about" id="closeAboutModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="about-body">
+                <div class="about-section">
+                    <h3 class="about-section-title">
+                        <i class="fas fa-info-circle"></i>
+                        <span>版本信息</span>
+                    </h3>
+                    <div class="version-info">
+                        <div class="version-label">版本号</div>
+                        <div class="version-value" id="versionNumber">v14.0.0</div>
+                    </div>
+                    <div class="version-info">
+                        <div class="version-label">发布日期</div>
+                        <div class="version-value">2025年11月8日</div>
+                    </div>
+                    <div class="version-info">
+                        <div class="version-label">最后更新</div>
+                        <div class="version-value">2026年7月27日</div>
+                    </div>
+                </div>
+                
+                <div class="about-section">
+                    <h3 class="about-section-title">
+                        <i class="fas fa-copyright"></i>
+                        <span>版权信息</span>
+                    </h3>
+                    <p class="about-text">© 2026 郑睿泽 保留所有权利.</p>
+                    <p class="about-text">本产品仅供个人使用，未经许可不得用于商业用途。</p>
+                </div>
+                
+                <div class="about-section">
+                    <h3 class="about-section-title">
+                        <i class="fas fa-code"></i>
+                        <span>技术信息</span>
+                    </h3>
+                    <p class="about-text">本应用使用以下技术：</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>HTML5, CSS3, JavaScript</li>
+                        <li>Font Awesome 图标库</li>
+                        <li>Open-Meteo 天气API</li>
+                        <li>本地存储技术</li>
+                    </ul>
+                </div>
+                
+                <div class="about-section">
+                    <h3 class="about-section-title">
+                        <i class="fas fa-handshake"></i>
+                        <span>人机共建</span>
+                    </h3>
+                    <p class="about-text">人机共建示范项目:高交互性简约主页</p>
+                </div>
+            </div>
+            
+            <div class="about-footer">
+                <button class="btn btn-back" id="backFromAboutBtn">返回</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 自定义对话框 -->
+    <div class="custom-dialog" id="customDialog">
+        <div class="dialog-content">
+            <div class="dialog-header">
+                <div class="dialog-icon warning" id="dialogIcon">
+                    <i class="fas fa-exclamation"></i>
+                </div>
+                <h3 class="dialog-title" id="dialogTitle">警告</h3>
+            </div>
+            <p class="dialog-message" id="dialogMessage">您确定要执行此操作吗？</p>
+            <div class="dialog-actions">
+                <button class="dialog-btn cancel" id="dialogCancelBtn">取消</button>
+                <button class="dialog-btn save" id="dialogSaveBtn" style="display: none;">保存并退出</button>
+                <button class="dialog-btn confirm" id="dialogConfirmBtn">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 分离的JavaScript文件 -->
+    <script src="js/script.js?v=20260727g"></script>
+    <!-- Font Awesome CDN fallback 检测 -->
+    <script>
+    (function() {
+        // 如果 Font Awesome 主源未加载成功，加载 CDN 备用
+        var testEl = document.createElement('i');
+        testEl.className = 'fas fa-home';
+        testEl.style.cssText = 'position:absolute;visibility:hidden;';
+        document.body.appendChild(testEl);
+        // 等一帧检查是否渲染了 Font Awesome 样式
+        requestAnimationFrame(function() {
+            var computed = getComputedStyle(testEl);
+            // Font Awesome 的 font-family 会包含 "Font Awesome"
+            if (computed.fontFamily.indexOf('Font Awesome') === -1) {
+                var fallback = document.createElement('link');
+                fallback.rel = 'stylesheet';
+                fallback.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
+                document.head.appendChild(fallback);
+            }
+            document.body.removeChild(testEl);
+        });
+    })();
+    </script>
+</body>
