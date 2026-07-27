@@ -1982,19 +1982,19 @@
 
             /* 对话框适配 */
             .modal-content {
-                width: 95%;
+                width: 90%;
                 max-width: none;
-                height: 85vh;
-                max-height: 85vh;
+                height: auto;
+                max-height: 80vh;
                 padding: 22px;
-                border-radius: 20px;
+                border-radius: var(--border-radius-dialog);
             }
 
             .about-content {
-                width: 95%;
+                width: 90%;
                 max-width: none;
-                max-height: 85vh;
-                border-radius: 20px;
+                max-height: 80vh;
+                border-radius: var(--border-radius-dialog);
             }
 
             .about-header,
@@ -2004,10 +2004,10 @@
             }
 
             .dialog-content {
-                width: 92%;
+                width: 88%;
                 max-width: none;
                 padding: 22px;
-                border-radius: 20px;
+                border-radius: var(--border-radius-dialog);
             }
 
             .form-row {
@@ -2166,22 +2166,22 @@
             }
 
             .modal-content {
-                width: 100%;
-                height: 90vh;
-                max-height: 90vh;
+                width: 92%;
+                height: auto;
+                max-height: 80vh;
                 padding: 16px;
-                border-radius: 16px;
+                border-radius: var(--border-radius-dialog);
             }
 
             .about-content {
-                width: 100%;
-                border-radius: 16px;
+                width: 92%;
+                border-radius: var(--border-radius-dialog);
             }
 
             .dialog-content {
-                width: 96%;
+                width: 92%;
                 padding: 18px;
-                border-radius: 16px;
+                border-radius: var(--border-radius-dialog);
             }
 
             .modal-title {
