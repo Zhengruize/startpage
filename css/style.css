@@ -24,6 +24,9 @@
             /* ===== 发光 ===== */
             --glow-focus: 0 0 0 3px rgba(74,127,181,0.15);
 
+            /* ===== 次要色 ===== */
+            --secondary-color: #3a6a9a;
+
             /* ===== 圆角 ===== */
             --border-radius-dialog: 16px;
             --border-radius-select: 12px;
@@ -56,6 +59,8 @@
             --shadow-xl: 0 8px 24px rgba(0,0,0,0.4);
 
             --glow-focus: 0 0 0 3px rgba(91,142,196,0.2);
+
+            --secondary-color: #4a7fb5;
         }
 
         * {
@@ -1193,7 +1198,7 @@
         .text-input:focus, .form-input:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: var(--glow-primary);
+            box-shadow: var(--glow-focus);
         }
 
         .toggle-switch {
