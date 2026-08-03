@@ -28,7 +28,7 @@
             --secondary-color: #3a6a9a;
 
             /* ===== 圆角 ===== */
-            --border-radius-dialog: 16px;
+            --border-radius-dialog: 20px;
             --border-radius-select: 12px;
             --border-radius-input: 14px;
             --border-radius-button: 10px;
@@ -36,7 +36,7 @@
             --border-radius-icon: 50%;
 
             /* ===== 过渡 ===== */
-            --transition: all 0.2s ease;
+            --transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         [data-theme="dark"] {
@@ -247,7 +247,7 @@
             border-radius: var(--border-radius-button);
             padding: 10px 20px;
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 500;
             cursor: pointer;
             transition: var(--transition);
             display: flex;
@@ -257,6 +257,7 @@
         }
 
         .edit-button:hover {
+            background-color: var(--secondary-color);
             transform: translateY(-2px) scale(1.03);
             box-shadow: 0 2px 8px rgba(74,127,181,0.18);
         }
@@ -562,7 +563,7 @@
             justify-content: center;
             align-items: center;
             opacity: 0;
-            transition: opacity 0.25s ease;
+            transition: opacity 0.3s ease;
             overflow: hidden;
         }
         
@@ -574,10 +575,11 @@
             visibility: visible;
             pointer-events: auto;
             opacity: 1;
+            animation: modalFadeIn 0.3s ease forwards;
         }
 
         .modal.fade-out {
-            opacity: 0;
+            animation: modalFadeOut 0.3s ease forwards;
         }
 
         /* 退出时内容同步缩小消失 */
@@ -595,14 +597,14 @@
             max-width: 700px;
             height: 80vh;
             max-height: 80vh;
-            overflow: visible;
+            overflow: hidden;
             padding: 30px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.2);
             display: flex;
             flex-direction: column;
             transform: scale(0.8);
             opacity: 0;
-            transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.25s ease;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             backdrop-filter: blur(36px) saturate(180%);
             -webkit-backdrop-filter: blur(36px) saturate(180%);
@@ -738,7 +740,7 @@
             padding: 8px 16px;
             border-radius: var(--border-radius-button);
             border: none;
-            font-weight: 600;
+            font-weight: 500;
             cursor: pointer;
             transition: var(--transition);
             display: flex;
@@ -1342,7 +1344,7 @@
             justify-content: center;
             align-items: center;
             opacity: 0;
-            transition: opacity 0.25s ease;
+            transition: opacity 0.3s ease;
         }
         
         [data-theme="dark"] .custom-dialog {
@@ -1353,10 +1355,11 @@
             visibility: visible;
             pointer-events: auto;
             opacity: 1;
+            animation: modalFadeIn 0.3s ease forwards;
         }
 
         .custom-dialog.fade-out {
-            opacity: 0;
+            animation: modalFadeOut 0.3s ease forwards;
         }
 
         /* 退出时内容同步缩小消失 */
@@ -1378,7 +1381,7 @@
             gap: 20px;
             transform: scale(0.8);
             opacity: 0;
-            transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.25s ease;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             backdrop-filter: blur(36px) saturate(180%);
             -webkit-backdrop-filter: blur(36px) saturate(180%);
         }
@@ -1417,6 +1420,7 @@
             justify-content: center;
             color: white;
             font-size: 12px;
+            animation: pulse 2s infinite;
         }
 
         .dialog-icon.warning {
@@ -1920,12 +1924,12 @@
         /* === 响应式布局 === */
         @media (max-width: 768px) {
             body {
-                padding: 12px;
+                padding: 20px;
             }
 
             header {
                 padding: 16px 0;
-                margin-bottom: 32px;
+                margin-bottom: 40px;
             }
 
             .logo {
@@ -1937,8 +1941,8 @@
             }
 
             .search-container {
-                max-width: 100%;
-                margin-bottom: 40px;
+                max-width: 680px;
+                margin-bottom: 60px;
             }
 
             .search-input {
@@ -1948,11 +1952,11 @@
 
             .links-grid {
                 grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-                gap: 10px;
+                gap: 20px;
             }
 
             .link-card {
-                padding: 18px 12px;
+                padding: 20px;
             }
 
             .link-icon {
@@ -1963,7 +1967,7 @@
             }
 
             .link-name {
-                font-size: 12px;
+                font-size: 14px;
             }
 
             .info-widgets {
@@ -1989,8 +1993,9 @@
             .modal-content {
                 width: 90%;
                 max-width: none;
-                height: auto;
+                height: 80vh;
                 max-height: 80vh;
+                overflow: hidden;
                 padding: 22px;
                 border-radius: var(--border-radius-dialog);
             }
@@ -2050,7 +2055,7 @@
             }
 
             .section-title {
-                font-size: 18px;
+                font-size: 20px;
             }
 
             .settings-group {
@@ -2067,9 +2072,9 @@
 
             /* 按钮触摸区域增大 */
             .btn {
-                min-height: 44px;
-                padding: 10px 20px;
-                font-size: 15px;
+                min-height: 36px;
+                padding: 8px 16px;
+                font-size: 14px;
             }
 
             .theme-toggle,
@@ -2138,11 +2143,11 @@
         @media (max-width: 480px) {
             .links-grid {
                 grid-template-columns: repeat(3, 1fr);
-                gap: 8px;
+                gap: 20px;
             }
 
             .link-card {
-                padding: 14px 8px;
+                padding: 20px;
             }
 
             .link-icon {
@@ -2153,7 +2158,7 @@
             }
 
             .link-name {
-                font-size: 11px;
+                font-size: 14px;
             }
 
             .time-display,
@@ -2162,18 +2167,19 @@
             }
 
             .search-input {
-                font-size: 15px;
-                padding: 14px 48px 14px 16px;
+                font-size: 16px;
+                padding: 16px 48px 16px 16px;
             }
 
             .section-title {
-                font-size: 17px;
+                font-size: 20px;
             }
 
             .modal-content {
                 width: 92%;
-                height: auto;
+                height: 80vh;
                 max-height: 80vh;
+                overflow: hidden;
                 padding: 16px;
                 border-radius: var(--border-radius-dialog);
             }
@@ -2194,7 +2200,7 @@
             }
 
             .settings-group {
-                padding: 14px;
+                padding: 18px;
             }
 
             .settings-title {
@@ -2210,7 +2216,7 @@
             }
 
             .btn {
-                min-height: 42px;
+                min-height: 36px;
                 font-size: 14px;
             }
         }
@@ -2230,6 +2236,12 @@
         @keyframes modalFadeOut {
             from { opacity: 1; }
             to { opacity: 0; }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
 
         /* ===== 全局禁用玻璃效果 ===== */
